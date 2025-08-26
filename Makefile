@@ -18,17 +18,17 @@ SIM_OUT = /home/HDD/hong/simulation_results/scarab
 
 # ===================== BENCH 설정 =====================
 BENCH_LIST ?= \
-	perlbench_17_r_ref0 \
-	gcc_17_r_ref0 \
+	perlbench_17_r_ref0 perlbench_17_r_ref1 perlbench_17_r_ref2 \
+	gcc_17_r_ref0 gcc_17_r_ref1 gcc_17_r_ref2 gcc_17_r_ref3 gcc_17_r_ref4 \
 	omnetpp_17_r_ref0 \
 	xalancbmk_17_r_ref0 \
-	x264_17_r_ref0 \
+	x264_17_r_ref0 x264_17_r_ref1 x264_17_r_ref2 \
 	deepsjeng_17_r_ref0 \
 	leela_17_r_ref0 \
 	mcf_17_r_ref0 \
 	exchange2_17_r_ref0 \
-	xz_17_r_ref0 \
-	bwaves_17_r_ref0 \
+	xz_17_r_ref0 xz_17_r_ref1 xz_17_r_ref2 \
+	bwaves_17_r_ref0 bwaves_17_r_ref1 bwaves_17_r_ref2 bwaves_17_r_ref3 \
 	cactuBSSN_17_r_ref0 \
 	namd_17_r_ref0 \
 	parest_17_r_ref0 \
@@ -162,23 +162,28 @@ launch-trace:
 launch-trace-perfect:
 	@mkdir -p $(SIM_OUT)/perfect
 	@cp $(PARAM) PARAMS.in
-	TRACE_BASE=$(TRACE_DIR)/traces_simp && \
+	TRACE_BASE=$(TRACE_DIR)/$(BENCH_NAME)/traces_simp/trace && \
+	if [ ! -d "$$TRACE_BASE" ]; then \
+		echo "[ERROR] Trace directory for $(BENCH_NAME) not found at $$TRACE_BASE."; exit 1; \
+	fi && \
 	WINDOW_DIRS=$$(find $$TRACE_BASE -mindepth 1 -maxdepth 1 -type d | sort) && \
 	INDEX=1; \
 	for w in $$WINDOW_DIRS; do \
-		LINE=$$(awk -F, 'NR=='"$$INDEX"' {print}' $(TRACE_DIR)/simpoints_weight.csv); \
-		START=$$(echo $$LINE | cut -d',' -f1); \
-		WEIGHT=$$(echo $$LINE | cut -d',' -f3); \
-		WIN_FINAL="window_$${START}_$${WEIGHT}"; \
-		TRACE_FILE=$$(ls $$w/*.zip | head -n 1); \
-		mkdir -p $(SIM_OUT)/perfect/$$WIN_FINAL; \
-		echo "Launching Scarab PERFECT on window: $$WIN_FINAL with trace $$TRACE_FILE"; \
+		LINE=$$(awk 'NR=='"$$INDEX"' {print}' $(TRACE_DIR)/$(BENCH_NAME)/simpoints/opt.w.lpt0.99); \
+		WEIGHT=$$(echo $$LINE | awk '{print $$1}'); \
+		WIN_NAME=$$(basename $$w); \
+		WIN_FINAL="$${WIN_NAME}_$${WEIGHT}"; \
+		TRACE_FILE=$$(find $$w -maxdepth 1 -name 'drmemtrace.*.trace.zip' | sort | head -n 1); \
+		mkdir -p $(SIM_OUT)/perfect/$(BENCH_NAME)/$$WIN_FINAL; \
+		echo "Launching Scarab on window: $$WIN_FINAL with trace $$TRACE_FILE"; \
 		$(SCARAB_DIR)/src/scarab --frontend memtrace \
 			--cbp_trace_r0=$$TRACE_FILE \
 			--inst_limit=$(SIMULATION_INSTRUCTIONS) \
-			--output_dir=$(SIM_OUT)/perfect/$$WIN_FINAL \
-			--stdout=$(SIM_OUT)/perfect/$$WIN_FINAL/scarab.out \
-			--stderr=$(SIM_OUT)/perfect/$$WIN_FINAL/scarab.err \
+			--output_dir=$(SIM_OUT)/perfect/$(BENCH_NAME)/$$WIN_FINAL \
+			--stdout=stdout \
+			--stderr=stderr \
+			--trace_bbv_output=bbv_output.txt \
+			--trace_footprint_output=footprint.txt \
 			$(SCARAB_ARGS) --perfect_bp 1 --perfect_target 1; \
 		INDEX=$$(($$INDEX + 1)); \
 	done
@@ -221,5 +226,6 @@ trace-all-parallel:
 launch-all-parallel:
 	@for bench in $(BENCH_LIST); do \
 		( $(MAKE) launch-trace BENCH_NAME=$$bench ) & \
+		( $(MAKE) launch-trace-perfect BENCH_NAME=$$bench ) & \
 	done
 	@wait

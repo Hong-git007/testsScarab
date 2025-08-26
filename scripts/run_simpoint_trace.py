@@ -235,7 +235,6 @@ def cluster_then_trace(workload, suite, simpoint_home, bincmd, client_bincmd,
     # 2. clustering
     # 3. trace segments of the workload
     # 4. drraw2trace
-    # 5. minimize traces
     chunk_size = 400000000
     seg_size = 200000000
     warmup = 200000000

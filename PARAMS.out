@@ -4,7 +4,7 @@
 --inst_limit 400000000
 --sim_limit none
 --full_warmup 200000000
---output_dir /home/HDD/hong/simulation_results/scarab/baseline/perlbench_17_r_ref0/window.0436_0000_0.307021
+--output_dir /home/HDD/hong/simulation_results/scarab/baseline/leela_17_r_ref0/window.8332_0002_0.317037
 --dump_params 1
 --dump_stats 1
 --dump_trace 0
@@ -106,7 +106,7 @@
 --fetch_off_path_ops 1
 --stores_do_not_block_window 1
 --prefs_do_not_block_window 1
---cbp_trace_r0 /home/HDD/hong/benchmarks/TRACE/SPEC17/perlbench_17_r_ref0/traces_simp/trace/window.0436_0000/drmemtrace.perlbench_r_base.scarab-m64.62429.8148.trace.zip
+--cbp_trace_r0 /home/HDD/hong/benchmarks/TRACE/SPEC17/leela_17_r_ref0/traces_simp/trace/window.8332_0002/drmemtrace.leela_r_base.scarab-m64.64705.2552.trace.zip
 --debug_cycle_start 200000000
 --debug_cycle_stop 200050000
 --debug_inst_start 0
@@ -173,7 +173,7 @@ NUM_HEARTBEATS                           0
 USE_FETCHED_COUNT                        FALSE                           
 PERIODIC_DUMP                            FALSE                           
 FILE_TAG                                 ""                              
-OUTPUT_DIR                               "."                             /home/HDD/hong/simulation_results/scarab/baseline/perlbench_17_r_ref0/window.0436_0000_0.307021
+OUTPUT_DIR                               "."                             /home/HDD/hong/simulation_results/scarab/baseline/leela_17_r_ref0/window.8332_0002_0.317037
 STATUS_FILE                              NULL                            
 BINDIR                                   NULL                            
 DUMP_PARAMS                              TRUE                            1
@@ -584,7 +584,7 @@ STORES_DO_NOT_BLOCK_WINDOW               FALSE                           1
 PREFS_DO_NOT_BLOCK_WINDOW                FALSE                           1
 OBEY_REG_DEP                             TRUE                            
 TRACK_L1_MISS_DEPS                       FALSE                           
-CBP_TRACE_R0                             NULL                            /home/HDD/hong/benchmarks/TRACE/SPEC17/perlbench_17_r_ref0/traces_simp/trace/window.0436_0000/drmemtrace.perlbench_r_base.scarab-m64.62429.8148.trace.zip
+CBP_TRACE_R0                             NULL                            /home/HDD/hong/benchmarks/TRACE/SPEC17/leela_17_r_ref0/traces_simp/trace/window.8332_0002/drmemtrace.leela_r_base.scarab-m64.64705.2552.trace.zip
 CBP_TRACE_R1                             NULL                            
 CBP_TRACE_R2                             NULL                            
 CBP_TRACE_R3                             NULL                            

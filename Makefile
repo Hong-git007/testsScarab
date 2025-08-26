@@ -138,11 +138,11 @@ launch-trace:
 		echo "[ERROR] Trace directory for $(BENCH_NAME) not found at $$TRACE_BASE."; exit 1; \
 	fi && \
 	WINDOW_DIRS=$$(find $$TRACE_BASE -mindepth 1 -maxdepth 1 -type d | sort) && \
-	INDEX=1; \
 	for w in $$WINDOW_DIRS; do \
-		LINE=$$(awk 'NR=='"$$INDEX"' {print}' $(TRACE_DIR)/$(BENCH_NAME)/simpoints/opt.w.lpt0.99); \
-		WEIGHT=$$(echo $$LINE | awk '{print $$1}'); \
 		WIN_NAME=$$(basename $$w); \
+		WIN_IDX=$$(echo $$WIN_NAME | awk -F'_' '{print $$2}' | sed 's/^0*\([0-9]\)/\1/'); \
+		LINE=$$(awk '$$2=='"$$WIN_IDX"' {print}' $(TRACE_DIR)/$(BENCH_NAME)/simpoints/opt.w.lpt0.99); \
+		WEIGHT=$$(echo $$LINE | awk '{print $$1}'); \
 		WIN_FINAL="$${WIN_NAME}_$${WEIGHT}"; \
 		TRACE_FILE=$$(find $$w -maxdepth 1 -name 'drmemtrace.*.trace.zip' | sort | head -n 1); \
 		mkdir -p $(SIM_OUT)/baseline/$(BENCH_NAME)/$$WIN_FINAL; \
@@ -156,7 +156,6 @@ launch-trace:
 			--trace_bbv_output=bbv_output.txt \
 			--trace_footprint_output=footprint.txt \
 			$(SCARAB_ARGS); \
-		INDEX=$$(($$INDEX + 1)); \
 	done
 
 launch-trace-perfect:
@@ -167,11 +166,11 @@ launch-trace-perfect:
 		echo "[ERROR] Trace directory for $(BENCH_NAME) not found at $$TRACE_BASE."; exit 1; \
 	fi && \
 	WINDOW_DIRS=$$(find $$TRACE_BASE -mindepth 1 -maxdepth 1 -type d | sort) && \
-	INDEX=1; \
 	for w in $$WINDOW_DIRS; do \
-		LINE=$$(awk 'NR=='"$$INDEX"' {print}' $(TRACE_DIR)/$(BENCH_NAME)/simpoints/opt.w.lpt0.99); \
-		WEIGHT=$$(echo $$LINE | awk '{print $$1}'); \
 		WIN_NAME=$$(basename $$w); \
+		WIN_IDX=$$(echo $$WIN_NAME | awk -F'_' '{print $$2}' | sed 's/^0*\([0-9]\)/\1/'); \
+		LINE=$$(awk '$$2=='"$$WIN_IDX"' {print}' $(TRACE_DIR)/$(BENCH_NAME)/simpoints/opt.w.lpt0.99); \
+		WEIGHT=$$(echo $$LINE | awk '{print $$1}'); \
 		WIN_FINAL="$${WIN_NAME}_$${WEIGHT}"; \
 		TRACE_FILE=$$(find $$w -maxdepth 1 -name 'drmemtrace.*.trace.zip' | sort | head -n 1); \
 		mkdir -p $(SIM_OUT)/perfect/$(BENCH_NAME)/$$WIN_FINAL; \
@@ -185,7 +184,6 @@ launch-trace-perfect:
 			--trace_bbv_output=bbv_output.txt \
 			--trace_footprint_output=footprint.txt \
 			$(SCARAB_ARGS) --perfect_bp 1 --perfect_target 1; \
-		INDEX=$$(($$INDEX + 1)); \
 	done
 
 # ===================== Cleanup =====================

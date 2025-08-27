@@ -280,44 +280,44 @@ make trace-all-parallel → make launch-all-parallel → make process-all-bench-
 ##### 8.4 Troubleshooting: Handling Trace Compression Errors
 
 * The Problem
-Occasionally, an error can occur during the trace compression step of the drraw2trace process for certain benchmarks. This results in a corrupted trace file (a .zip file that cannot be read), which causes the Scarab simulation to fail with an error indicating it cannot read the file.
+  Occasionally, an error can occur during the trace compression step of the drraw2trace process for certain benchmarks. This results in a corrupted trace file (a .zip file that cannot be read), which causes the Scarab simulation to fail with an error indicating it cannot read the file.
 
 * The Solution
-To resolve this issue, a helper script named scarab_retry_failed.sh is available in the scripts/ directory. This script automates the process of fixing these specific failures by:
+  To resolve this issue, a helper script named scarab_retry_failed.sh is available in the scripts/ directory. This script automates the process of fixing these specific failures by:
 
-Automatically detecting the specific simulation windows that failed.
+  Automatically detecting the specific simulation windows that failed.
 
-Re-generating the required traces for those windows without compression.
+  Re-generating the required traces for those windows without compression.
 
-Re-running the Scarab simulation using the new, uncompressed traces.
+  Re-running the Scarab simulation using the new, uncompressed traces.
 
 * How to Use the scarab_retry_failed.sh Script
 
-Follow these steps to retry failed benchmarks.
+  Follow these steps to retry failed benchmarks.
 
-Step 1: Modify the Script
-```bash
-# Example: Add the name of your failed benchmark
-BENCHMARKS=("gcc_17_r_ref1" "gcc_17_r_ref3" "your_failed_benchmark_name")
-```
+  Step 1: Modify the Script
+  ```bash
+  # Example: Add the name of your failed benchmark
+  BENCHMARKS=("gcc_17_r_ref1" "gcc_17_r_ref3" "your_failed_benchmark_name")
+  ```
 
-Step 2: Execute the Script
-Navigate to the scripts directory and run the script from there.
-```bash
-# Assuming you are in the testsScarab directory
-cd scripts/
-./scarab_retry_failed.sh
-```
-The script will then automatically handle the rest of the process.
+  Step 2: Execute the Script
+  Navigate to the scripts directory and run the script from there.
+  ```bash
+  # Assuming you are in the testsScarab directory
+  cd scripts/
+  ./scarab_retry_failed.sh
+  ```
+  The script will then automatically handle the rest of the process.
 
 * How It Works
 
-The script's logic is as follows:
+  The script's logic is as follows:
 
-1. Detect Failures: It scans the simulation output directories. A "window" is considered to have failed if its output directory contains stdout.out and stderr.out files but is missing the final result file (e.g., bp.stat.0.csv).
+  1. Detect Failures: It scans the simulation output directories. A "window" is considered to have failed if its output directory contains stdout.out and stderr.out files but is missing the final result file (e.g., bp.stat.0.csv).
 
-2. Regenerate Trace: For each failed window, it finds the corresponding raw trace and runs the drraw2trace tool with the -compress none flag. This creates a new, uncompressed trace.
+  2. Regenerate Trace: For each failed window, it finds the corresponding raw trace and runs the drraw2trace tool with the -compress none flag. This creates a new, uncompressed trace.
 
-3. Rerun Simulation: It then launches Scarab again for that specific window, this time using the newly created uncompressed trace.
+  3. Rerun Simulation: It then launches Scarab again for that specific window, this time using the newly created uncompressed trace.
 
-📝 Note: Before running the script, please ensure that the path variables at the top of scarab_retry_failed.sh (such as SIM_OUT, TRACE_DIR, SCARAB_BIN, etc.) are correctly set for your environment.
+  📝 Note: Before running the script, please ensure that the path variables at the top of scarab_retry_failed.sh (such as SIM_OUT, TRACE_DIR, SCARAB_BIN, etc.) are correctly set for your environment.

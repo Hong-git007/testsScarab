@@ -188,60 +188,69 @@ launch-trace-perfect:
 
 # ===================== 모든 CSV 파일 생성 및 최종 합계 포함 =====================
 process-all-csv:
-	@echo "--- Processing simulation outputs and creating CSVs for both baseline and perfect ---"
+	@echo "--- Processing simulation outputs (SIM_OUT based) for both baseline and perfect ---"
 	@for target_folder in baseline perfect; do \
 		echo "Processing $$target_folder folder..."; \
-		\
-		mkdir -p $(SIM_OUT)/$$target_folder/$(BENCH_NAME); \
 		CSV_FILE=$(SIM_OUT)/$$target_folder/$(BENCH_NAME)/results.csv; \
+		if [ -f "$$CSV_FILE" ]; then rm "$$CSV_FILE"; fi; \
+		printf "%-55s %15s %15s %15s\n" "SimPoint" "Weight" "IPC" "MPKI" > "$$CSV_FILE"; \
 		\
-		if [ -f "$$CSV_FILE" ]; then \
-			echo "Removing existing CSV file: $$CSV_FILE"; \
-			rm "$$CSV_FILE"; \
-		fi; \
+		TEMP_DATA_FILE=$$(mktemp); \
+		RESULT_DIR=$(SIM_OUT)/$$target_folder/$(BENCH_NAME); \
 		\
-		printf "%-20s %15s %15s %15s\n" "SimPoint" "Weight" "IPC" "MPKI" > "$$CSV_FILE"; \
-		\
-		TOTAL_WEIGHT=0; \
-		TOTAL_WEIGHTED_IPC=0; \
-		TOTAL_WEIGHTED_MPKI=0; \
-		\
-		TRACE_BASE=$(TRACE_DIR)/$(BENCH_NAME)/traces_simp/trace; \
-		if [ ! -d "$$TRACE_BASE" ]; then \
-			echo "[WARNING] Trace directory for $(BENCH_NAME) not found. Skipping this benchmark for $$target_folder..."; \
-			echo "N/A" >> "$$CSV_FILE"; \
+		if [ ! -d "$$RESULT_DIR" ]; then \
+			echo "[WARNING] Result directory not found: $$RESULT_DIR"; \
 			continue; \
 		fi; \
 		\
-		WINDOW_DIRS=$$(find $$TRACE_BASE -mindepth 1 -maxdepth 1 -type d | sort); \
-		for w in $$WINDOW_DIRS; do \
-			WIN_NAME=$$(basename $$w); \
-			WIN_IDX=$$(echo $$WIN_NAME | awk -F'_' '{print $$2}' | sed 's/^0*\([0-9]\)/\1/'); \
+		RESULT_DIRS=$$(find $$RESULT_DIR -mindepth 1 -maxdepth 1 -type d | sort); \
+		for d in $$RESULT_DIRS; do \
+			DIR_NAME=$$(basename "$$d"); \
+			WIN_NAME_PART=$$(echo "$$DIR_NAME" | cut -d'_' -f1,2); \
+			WIN_IDX=$$(echo "$$DIR_NAME" | cut -d'_' -f2 | sed 's/^0*\([0-9]\)/\1/'); \
+			\
 			LINE=$$(awk '$$2=='"$$WIN_IDX"' {print}' $(TRACE_DIR)/$(BENCH_NAME)/simpoints/opt.w.lpt0.99); \
 			WEIGHT=$$(echo $$LINE | awk '{print $$1}'); \
-			WIN_FINAL="$${WIN_NAME}_$${WEIGHT}"; \
-			BP_FILE=$(SIM_OUT)/$$target_folder/$(BENCH_NAME)/$$WIN_FINAL/bp.stat.0.out; \
+			\
+			BP_FILE="$$d/bp.stat.0.out"; \
+			IPC="N/A"; MPKI="N/A"; \
 			\
 			if [ -f "$$BP_FILE" ]; then \
-				TOTAL_WEIGHT=$$(echo "scale=7; $$TOTAL_WEIGHT + $$WEIGHT" | bc -l); \
-				\
-				IPC=$$(grep "Periodic:" "$$BP_FILE" | awk '{print $$NF}'); \
-				if [ -z "$$IPC" ]; then IPC=0; fi; \
-				WEIGHTED_IPC_CONTRIBUTION=$$(echo "scale=7; $$WEIGHT * $$IPC" | bc -l); \
-				TOTAL_WEIGHTED_IPC=$$(echo "scale=7; $$TOTAL_WEIGHTED_IPC + $$WEIGHTED_IPC_CONTRIBUTION" | bc -l); \
-				\
-				MPKI=$$(grep "CBR_ON_PATH_MISPREDICT_PER1000INST" "$$BP_FILE" | awk '{print $$5}'); \
-				if [ -z "$$MPKI" ]; then MPKI=0; fi; \
-				WEIGHTED_MPKI_CONTRIBUTION=$$(echo "scale=7; $$WEIGHT * $$MPKI" | bc -l); \
-				TOTAL_WEIGHTED_MPKI=$$(echo "scale=7; $$TOTAL_WEIGHTED_MPKI + $$WEIGHTED_MPKI_CONTRIBUTION" | bc -l); \
-				\
-				printf "%-20s %15.7f %15.5f %15.4f\n" "$$WIN_NAME" "$$WEIGHT" "$$IPC" "$$MPKI" >> "$$CSV_FILE"; \
-			else \
-				echo "[WARNING] bp.stat.0.out not found for $$WIN_FINAL. Skipping..."; \
-			fi \
+				IPC_VAL=$$(grep "Periodic:" "$$BP_FILE" | awk '{print $$NF}'); \
+				MPKI_VAL=$$(grep "CBR_ON_PATH_MISPREDICT_PER1000INST" "$$BP_FILE" | awk '{print $$5}'); \
+				if [ -n "$$IPC_VAL" ]; then IPC="$$IPC_VAL"; fi; \
+				if [ -n "$$MPKI_VAL" ]; then MPKI="$$MPKI_VAL"; fi; \
+			fi; \
+			\
+			echo "$$DIR_NAME $$WEIGHT $$IPC $$MPKI" >> "$$TEMP_DATA_FILE"; \
 		done; \
 		\
-		printf "%-20s %15.7f %15.5f %15.4f\n" "TOTAL" "$$TOTAL_WEIGHT" "$$TOTAL_WEIGHTED_IPC" "$$TOTAL_WEIGHTED_MPKI" >> "$$CSV_FILE"; \
+		awk ' \
+			BEGIN { \
+				total_w = 0; \
+				total_w_ipc = 0; \
+				total_w_mpki = 0; \
+			} \
+			{ \
+				name = $$1; w = $$2; ipc = $$3; mpki = $$4; \
+				printf "%-55s %15.7f %15s %15s\n", name, w, ipc, mpki; \
+				if (ipc != "N/A" && mpki != "N/A") { \
+					total_w += w; \
+					total_w_ipc += w * ipc; \
+					total_w_mpki += w * mpki; \
+				} \
+			} \
+			END { \
+				if (total_w > 0) { \
+					final_ipc = total_w_ipc / total_w; \
+					final_mpki = total_w_mpki / total_w; \
+					printf "%-55s %15.7f %15.5f %15.4f\n", "TOTAL", 1.0, final_ipc, final_mpki; \
+				} else { \
+					printf "%-55s %15.7f %15s %15s\n", "TOTAL", 1.0, "N/A", "N/A"; \
+				} \
+			} \
+		' "$$TEMP_DATA_FILE" >> "$$CSV_FILE"; \
+		rm "$$TEMP_DATA_FILE"; \
 	done
 	@echo "--- All CSV files created successfully ---"
 

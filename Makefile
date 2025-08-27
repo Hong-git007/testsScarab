@@ -89,9 +89,9 @@ run:
 
 
 # ===================== 기본 타겟 =====================
-.PHONY: all compile clean clean_outputs run run-all trace-all launch-all trace-all-parallel launch-all-parallel
+.PHONY: all compile clean clean_outputs run run-all trace-all launch-all trace-all-parallel launch-all-parallel process-all-csv process-all-bench-csv
 
-all: trace-simpoint-via-python launch-trace
+all: trace-all-parallel launch-all-parallel process-all-bench-csv
 
 compile:
 	@mkdir -p $(BINARY_DIR)
@@ -275,17 +275,50 @@ launch-all:
 	done
 
 trace-all-parallel:
+	@echo "[DEBUG] Starting parallel SimPoint tracing for all benchmarks (JOBS=$(JOBS))"
 	@for bench in $(BENCH_LIST); do \
-		( $(MAKE) trace-simpoint-via-python BENCH_NAME=$$bench ) & \
+		echo "[DEBUG] Launching trace-simpoint-via-python for $$bench"; \
+		( \
+			echo "[DEBUG][$$bench] Running Python trace script..."; \
+			$(MAKE) trace-simpoint-via-python BENCH_NAME=$$bench; \
+			RET=$$?; \
+			if [ $$RET -eq 0 ]; then \
+				echo "[DEBUG][$$bench] Completed successfully."; \
+			else \
+				echo "[ERROR][$$bench] Python trace failed with code $$RET"; \
+			fi \
+		) & \
 	done
 	@wait
+	@echo "[DEBUG] All parallel tracing jobs finished."
 
 launch-all-parallel:
+	@echo "[DEBUG] Starting parallel Scarab launch for all benchmarks"
 	@for bench in $(BENCH_LIST); do \
-		( $(MAKE) launch-trace BENCH_NAME=$$bench ) & \
-		( $(MAKE) launch-trace-perfect BENCH_NAME=$$bench ) & \
+		echo "[DEBUG] Launching baseline and perfect runs for $$bench"; \
+		( \
+			echo "[DEBUG][$$bench] Running launch-trace (baseline)..."; \
+			$(MAKE) launch-trace BENCH_NAME=$$bench; \
+			RET=$$?; \
+			if [ $$RET -eq 0 ]; then \
+				echo "[DEBUG][$$bench] Baseline run finished successfully."; \
+			else \
+				echo "[ERROR][$$bench] Baseline run failed with code $$RET"; \
+			fi \
+		) & \
+		( \
+			echo "[DEBUG][$$bench] Running launch-trace-perfect..."; \
+			$(MAKE) launch-trace-perfect BENCH_NAME=$$bench; \
+			RET=$$?; \
+			if [ $$RET -eq 0 ]; then \
+				echo "[DEBUG][$$bench] Perfect run finished successfully."; \
+			else \
+				echo "[ERROR][$$bench] Perfect run failed with code $$RET"; \
+			fi \
+		) & \
 	done
 	@wait
+	@echo "[DEBUG] All parallel Scarab runs finished."
 
 # ===================== 모든 벤치마크의 CSV 파일 생성 =====================
 process-all-bench-csv:

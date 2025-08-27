@@ -1,164 +1,23 @@
---mode full
---model cmp
 --frontend memtrace
 --inst_limit 400000000
---sim_limit none
 --full_warmup 200000000
---output_dir /home/HDD/hong/simulation_results/scarab/baseline/bwaves_17_r_ref1/window.0977_0003_0.746165
---dump_params 1
---dump_stats 1
---dump_trace 0
+--output_dir /home/HDD/hong/simulation_results/scarab/baseline/gcc_17_r_ref1/window.0571_0001_0.151625_nocompress
 --stdout stdout
 --stderr stderr
 --trace_bbv_output bbv_output.txt
 --trace_footprint_output footprint.txt
---mlc_present 1
---mlc_size 2097000
---mlc_assoc 8
---mlc_cycles 16
---l1_size 3145728
---l1_assoc 16
---l1_line_size 64
---l1_cycles 36          // just a guess
---l1_banks 1           // not sure
---l1_interleave_factor 64
---addr_translation random
---icache_size 32768
---icache_assoc 8
---icache_line_size 64
---uop_cache_enable 1
---uop_cache_width 8
---uop_cache_lines 512      # 8 x 512 = 4096 uops in total (~4K)
---uop_cache_assoc 8
---iprf_on_uop_cache_hit 1
---dcache_size 49152
---dcache_assoc 12
---dcache_line_size 64
---dcache_cycles 5
---dcache_read_ports 2
---dcache_write_ports 1
---dcache_banks 1
---mem_ooo_stores 1
---mem_obey_store_dep 1
---mem_req_buffer_entries 32
---mem_priority_ifetch 0
---mem_priority_dfetch 1
---mem_priority_dstore 2
---mem_priority_iprf 3
---mem_priority_dprf 4
---mem_priority_wb 5
---mem_priority_wb_nodirty 5
---promote_to_higher_priority_mem_req_type 1
---mem_req_buffer_pref_watermark 4
---order_beyond_bus 1
---set_off_path_confirmed 1
---ramulator_standard DDR4
---ramulator_speed DDR4_2400R
---ramulator_org DDR4_8Gb_x8
---ramulator_channels 1
---ramulator_ranks 1
---ramulator_bankgroups 4
---ramulator_banks 4
---ramulator_chip_width 8
---bus_width_in_bytes 8
---ramulator_rows 65536
---ramulator_cols 1024
---ramulator_scheduling_policy FRFCFS_Cap
---ramulator_readq_entries 32
---ramulator_writeq_entries 32
---ramulator_record_cmd_trace FALSE
---ramulator_print_cmd_trace FALSE
---ramulator_tCK 833333
---ramulator_tCL 16
---ramulator_tCCD 6
---ramulator_tCCDS 4
---ramulator_tCCDL 6
---ramulator_tCWL 12
---ramulator_tBL 4
---ramulator_tWTR 9
---ramulator_tWTRS 3
---ramulator_tWTRL 9
---ramulator_tRP 16
---ramulator_tRPpb 16
---ramulator_tRPab 16
---ramulator_tRCD 16
---ramulator_tRCDR 16
---ramulator_tRCDW 16
---ramulator_tRAS 39
---dram_tech_in_nm 32
---chip_cycle_time 312500
---issue_width 6
---rs_fill_width 0
---node_table_size 512
---node_ret_width 8
---decode_width 6
---idq_size 144
---reg_renaming_scheme 1
---reg_table_integer_physical_size 280
---reg_table_vector_physical_size 332
---rs_sizes 97 70 19
---rs_connections b0100110011 b1000001100 b0011000000
---fu_types b00100100111111100111001001111110010010011111110011100100111111 b10010000110111100011111001110111001000011011110001111100111011 b00000001000000001000000010000010000000100000000100000001000001 b00000001000000001000000010000010000000100000000100000001000001 b00000000110111100011011001110110000000011011110001101100111011 b01001000000000000111001001111110100100000000000011100100111111 b00000010000000010000000100000010000001000000001000000010000001 b00000010000000010000000100000010000001000000001000000010000001 b00000000000000000011001001110110000000000000000001100100111011 b00000001000000001000000010000010000000100000000100000001000001
---decode_cycles 5
---map_cycles 5
---extra_late_recovery_cycles 15                   # Number of cycles before the fetching of the first instructions after late recovery.
---extra_early_recovery_cycles 5                   # Number of cycles before the fetching of the first instructions after early recovery.
---fetch_off_path_ops 1
---stores_do_not_block_window 1
---prefs_do_not_block_window 1
---cbp_trace_r0 /home/HDD/hong/benchmarks/TRACE/SPEC17/bwaves_17_r_ref1/traces_simp/trace/window.0977_0003/drmemtrace.bwaves_r_base.scarab-m64.131887.9871.trace.zip
---debug_cycle_start 200000000
---debug_cycle_stop 200050000
---debug_inst_start 0
---debug_inst_stop -1
---debug_bp 1
---debug_btb 1
---perfect_nt_btb 0  # deprecated, effectively always true.
---cfs_per_cycle 6                         # Number of branches that can be predicted in a single cycle
---update_bp_off_path 1                         # Allow off path ops to update branch predictor state (e.g., ops when they complete exec stage).
---bp_update_at_retire 0                         # Update the BP at retire. If false, update at the end of exec.
---bp_mech tage64k
---btb_mech generic
---btb_entries 16384
---btb_assoc 4
---btb_off_path_writes 1
---enable_crs 1
---crs_entries 128
---crs_realistic 1
---enable_ibp 1                         # Enable the indirect branch predictor
---ibtb_mech tc_tagged
---ibtb_off_path_writes 1                         # Allow off path ops to update the ibtb.
---tc_entries 4096
---tc_assoc 4
---pref_stream_on 1
---stream_prefetch_n 4
---stream_start_dis 1
---stream_length 64
---stream_train_num 4
---stream_create_on_dc_miss 0
---stream_create_on_l1_miss 1
---pref_framework_on 1
---pref_ul1req_queue_overwrite_on_full 1
---pref_train_on_pref_misses 0
---pref_oracle_train_on 0
---pref_throttlefb_on 1
---pref_acc_thresh_1 0.75
---pref_acc_thresh_2 0.4
---pref_acc_thresh_3 0.4
---pref_update_interval 8192
---pref_timely_thresh 0.01
---pref_polpf_thresh 0.005
-1 1 1 1 1 1 1 
+--cbp_trace_r0 /home/HDD/hong/benchmarks/TRACE/SPEC17/gcc_17_r_ref1/traces_simp/trace/window.0571_0001_0.151625_nocompress/drmemtrace.cpugcc_r_base.scarab-m64.203707.3328.trace
+
 
 --- Cut out everything below to use this file as PARAMS.in ---
 
 Parameter status at compile time and values supplied on the command line:
 
-SIM_MODE                                 0                               full
-SIM_MODEL                                0                               cmp
+SIM_MODE                                 0                               
+SIM_MODEL                                0                               
 FRONTEND                                 FE_PIN_EXEC_DRIVEN              memtrace
 INST_LIMIT                               NULL                            400000000
-SIM_LIMIT                                "none"                          none
+SIM_LIMIT                                "none"                          
 FORWARD_PROGRESS_LIMIT                   100000000                       
 FORWARD_PROGRESS_INTERVAL                10000                           
 FAST_FORWARD                             0                               
@@ -173,12 +32,12 @@ NUM_HEARTBEATS                           0
 USE_FETCHED_COUNT                        FALSE                           
 PERIODIC_DUMP                            FALSE                           
 FILE_TAG                                 ""                              
-OUTPUT_DIR                               "."                             /home/HDD/hong/simulation_results/scarab/baseline/bwaves_17_r_ref1/window.0977_0003_0.746165
+OUTPUT_DIR                               "."                             /home/HDD/hong/simulation_results/scarab/baseline/gcc_17_r_ref1/window.0571_0001_0.151625_nocompress
 STATUS_FILE                              NULL                            
 BINDIR                                   NULL                            
-DUMP_PARAMS                              TRUE                            1
-DUMP_STATS                               TRUE                            1
-DUMP_TRACE                               FALSE                           0
+DUMP_PARAMS                              TRUE                            
+DUMP_STATS                               TRUE                            
+DUMP_TRACE                               FALSE                           
 CLEAR_STATS                              "never"                         
 STATS_TO_TRACE                           NULL                            
 STAT_TRACE_FILE                          "stats.trace"                   
@@ -204,11 +63,11 @@ TRACE_BBV_OUTPUT                         NULL                            bbv_out
 TRACE_FOOTPRINT_OUTPUT                   ""                              footprint.txt
 SEGMENT_INSTR_COUNT                      0                               
 ENABLE_SWPRF                             FALSE                           
-MLC_PRESENT                              FALSE                           1
-MLC_SIZE                                 (512 * 1024)                    2097000
-MLC_ASSOC                                4                               8
+MLC_PRESENT                              FALSE                           
+MLC_SIZE                                 (512 * 1024)                    
+MLC_ASSOC                                4                               
 MLC_LINE_SIZE                            64                              
-MLC_CYCLES                               12                              16
+MLC_CYCLES                               12                              
 PERFECT_MLC                              FALSE                           
 MLC_READ_PORTS                           1                               
 MLC_WRITE_PORTS                          1                               
@@ -218,16 +77,16 @@ MLC_CACHE_REPL_POLICY                    0
 MLC_WRITE_THROUGH                        FALSE                           
 PREFETCH_UPDATE_LRU_MLC                  TRUE                            
 FORCE_L1_MISS                            FALSE                           
-L1_SIZE                                  (4 * 1024 * 1024)               3145728
-L1_ASSOC                                 8                               16
-L1_LINE_SIZE                             64                              64
-L1_CYCLES                                24                              36          // just a guess
+L1_SIZE                                  (4 * 1024 * 1024)               
+L1_ASSOC                                 8                               
+L1_LINE_SIZE                             64                              
+L1_CYCLES                                24                              
 PERFECT_L1                               FALSE                           
 PRIVATE_L1                               FALSE                           
 L1_READ_PORTS                            1                               
 L1_WRITE_PORTS                           1                               
-L1_BANKS                                 8                               1           // not sure
-L1_INTERLEAVE_FACTOR                     64                              64
+L1_BANKS                                 8                               
+L1_INTERLEAVE_FACTOR                     64                              
 L1_CACHE_REPL_POLICY                     0                               
 L1_WRITE_THROUGH                         FALSE                           
 L1_IGNORE_WB                             FALSE                           
@@ -237,27 +96,27 @@ PREFETCH_UPDATE_LRU_L1                   TRUE
 MEMORY_RANDOM_ADDR                       FALSE                           
 VA_PAGE_SIZE_BYTES                       4096                            
 NUM_ADDR_NON_SIGN_EXTEND_BITS            48                              
-ADDR_TRANSLATION                         0                               random
+ADDR_TRANSLATION                         0                               
 CONSTANT_MEMORY_LATENCY                  FALSE                           
 MEMORY_CYCLES                            100                             
 STALL_MEM_REQS_ONLY                      FALSE                           
-ICACHE_SIZE                              (64 * 1024)                     32768
-ICACHE_ASSOC                             4                               8
-ICACHE_LINE_SIZE                         64                              64
+ICACHE_SIZE                              (64 * 1024)                     
+ICACHE_ASSOC                             4                               
+ICACHE_LINE_SIZE                         64                              
 PERFECT_ICACHE                           FALSE                           
 ICACHE_READ_PORTS                        1                               
 ICACHE_WRITE_PORTS                       1                               
 ICACHE_BANKS                             8                               
 ICACHE_REPL                              0                               
-UOP_CACHE_ENABLE                         1                               1
-UOP_CACHE_WIDTH                          6                               8
+UOP_CACHE_ENABLE                         1                               
+UOP_CACHE_WIDTH                          6                               
 ALWAYS_LOOKUP_ICACHE                     0                               
 UOP_CACHE_INSERT_ONLY_ONPATH             FALSE                           
 UOP_CACHE_READ_PORTS                     1                               
-UOP_CACHE_LINES                          384                             512      # 8 x 512 = 4096 uops in total (~4K)
-UOP_CACHE_ASSOC                          8                               8
+UOP_CACHE_LINES                          384                             
+UOP_CACHE_ASSOC                          8                               
 UOP_CACHE_MAX_IMM_DISP_LINE              4                               
-IPRF_ON_UOP_CACHE_HIT                    FALSE                           1
+IPRF_ON_UOP_CACHE_HIT                    FALSE                           
 UOP_CACHE_REPL                           0                               
 PRIORITY_LINE_STICKINESS_PERCENT         50                              
 PW_PRIORITY_LIST_FILEPATH                "pw_priority_list.csv"            
@@ -269,36 +128,36 @@ FDIP_UC_ASSOC                            4
 FDIP_UC_INSERT_REPLPOL                   0                               
 MAP_STAGE_CONSUME_FROM_ICACHE_AND_UOC_SAME_CYCLE TRUE                            
 UOP_QUEUE_LENGTH                         7                               
-DCACHE_SIZE                              (64 * 1024)                     49152
-DCACHE_ASSOC                             1                               12
-DCACHE_LINE_SIZE                         64                              64
-DCACHE_CYCLES                            2                               5
+DCACHE_SIZE                              (64 * 1024)                     
+DCACHE_ASSOC                             1                               
+DCACHE_LINE_SIZE                         64                              
+DCACHE_CYCLES                            2                               
 PERFECT_DCACHE                           FALSE                           
-DCACHE_READ_PORTS                        8                               2
-DCACHE_WRITE_PORTS                       1                               1
-DCACHE_BANKS                             1                               1
+DCACHE_READ_PORTS                        8                               
+DCACHE_WRITE_PORTS                       1                               
+DCACHE_BANKS                             1                               
 DCACHE_REPL                              0                               
 DCACHE_REPL_PREF_THRESH                  1                               
-MEM_OOO_STORES                           TRUE                            1
-MEM_OBEY_STORE_DEP                       TRUE                            1
+MEM_OOO_STORES                           TRUE                            
+MEM_OBEY_STORE_DEP                       TRUE                            
 PREF_INSERT_LRU                          FALSE                           
 PREF_INSERT_MIDDLE                       FALSE                           
 PREF_INSERT_LOWQTR                       FALSE                           
 PREF_INSERT_DYNACC                       FALSE                           
-MEM_REQ_BUFFER_ENTRIES                   32                              32
+MEM_REQ_BUFFER_ENTRIES                   32                              
 PRIVATE_MSHR_ON                          TRUE                            
-MEM_PRIORITY_IFETCH                      0                               0
-MEM_PRIORITY_DFETCH                      0                               1
-MEM_PRIORITY_DSTORE                      0                               2
-MEM_PRIORITY_IPRF                        9                               3
+MEM_PRIORITY_IFETCH                      0                               
+MEM_PRIORITY_DFETCH                      0                               
+MEM_PRIORITY_DSTORE                      0                               
+MEM_PRIORITY_IPRF                        9                               
 MEM_PRIORITY_UOCPRF                      9                               
 MEM_PRIORITY_FDIPPRFON                   8                               
 MEM_PRIORITY_FDIPPRFOFF                  9                               
-MEM_PRIORITY_DPRF                        10                              4
-MEM_PRIORITY_WB                          0                               5
-MEM_PRIORITY_WB_NODIRTY                  0                               5
-PROMOTE_TO_HIGHER_PRIORITY_MEM_REQ_TYPE  FALSE                           1
-MEM_REQ_BUFFER_PREF_WATERMARK            0                               4
+MEM_PRIORITY_DPRF                        10                              
+MEM_PRIORITY_WB                          0                               
+MEM_PRIORITY_WB_NODIRTY                  0                               
+PROMOTE_TO_HIGHER_PRIORITY_MEM_REQ_TYPE  FALSE                           
+MEM_REQ_BUFFER_PREF_WATERMARK            0                               
 MEM_REQ_BUFFER_WB_VALVE                  2                               
 MEM_L1_FILL_QUEUE_ENTRIES                32                              
 MEM_BUS_OUT_QUEUE_PARTITION_ENABLE       FALSE                           
@@ -316,7 +175,7 @@ KICKOUT_PREFETCHES                       FALSE
 KICKOUT_LOOK_FOR_OLDEST_FIRST            FALSE                           
 KICKOUT_OLDEST_PREFETCH                  FALSE                           
 KICKOUT_OLDEST_PREFETCH_WITHIN_BANK      FALSE                           
-ORDER_BEYOND_BUS                         FALSE                           1
+ORDER_BEYOND_BUS                         FALSE                           
 ALL_FIFO_QUEUES                          FALSE                           
 QUEUE_MLC_SIZE                           0                               
 QUEUE_L1_SIZE                            0                               
@@ -337,7 +196,7 @@ IC_PREF_CACHE_ASSOC                      4
 L1_PREF_CACHE_ENABLE                     FALSE                           
 L1_PREF_CACHE_SIZE                       (1024 * 1024)                   
 L1_PREF_CACHE_ASSOC                      8                               
-SET_OFF_PATH_CONFIRMED                   FALSE                           1
+SET_OFF_PATH_CONFIRMED                   FALSE                           
 USE_CONFIRMED_OFF                        FALSE                           
 PREFCACHE_MOVE_OFFPATH                   FALSE                           
 CACHE_STAT_ENABLE                        FALSE                           
@@ -385,41 +244,41 @@ DUMB_MODEL_AVG_ROW_HITS                  1
 DUMB_MODEL_AVG_ROW_HITS_PER_CORE         NULL                            
 DUMB_MODEL_MLP                           1                               
 DUMB_MODEL_MLP_PER_CORE                  NULL                            
-RAMULATOR_STANDARD                       "DDR4"                          DDR4
-RAMULATOR_SPEED                          "DDR4_2400R"                    DDR4_2400R
-RAMULATOR_ORG                            "DDR4_8Gb_x8"                   DDR4_8Gb_x8
-RAMULATOR_CHANNELS                       1                               1
-RAMULATOR_RANKS                          1                               1
-RAMULATOR_BANKGROUPS                     4                               4
-RAMULATOR_BANKS                          4                               4
-RAMULATOR_CHIP_WIDTH                     8                               8
-BUS_WIDTH_IN_BYTES                       8                               8
-RAMULATOR_ROWS                           65536                           65536
-RAMULATOR_COLS                           1024                            1024
-RAMULATOR_SCHEDULING_POLICY              "FRFCFS_Cap"                    FRFCFS_Cap
-RAMULATOR_READQ_ENTRIES                  32                              32
-RAMULATOR_WRITEQ_ENTRIES                 32                              32
-RAMULATOR_REC_CMD_TRACE                  "off"                           FALSE
-RAMULATOR_PRINT_CMD_TRACE                "off"                           FALSE
+RAMULATOR_STANDARD                       "DDR4"                          
+RAMULATOR_SPEED                          "DDR4_2400R"                    
+RAMULATOR_ORG                            "DDR4_8Gb_x8"                   
+RAMULATOR_CHANNELS                       1                               
+RAMULATOR_RANKS                          1                               
+RAMULATOR_BANKGROUPS                     4                               
+RAMULATOR_BANKS                          4                               
+RAMULATOR_CHIP_WIDTH                     8                               
+BUS_WIDTH_IN_BYTES                       8                               
+RAMULATOR_ROWS                           65536                           
+RAMULATOR_COLS                           1024                            
+RAMULATOR_SCHEDULING_POLICY              "FRFCFS_Cap"                    
+RAMULATOR_READQ_ENTRIES                  32                              
+RAMULATOR_WRITEQ_ENTRIES                 32                              
+RAMULATOR_REC_CMD_TRACE                  "off"                           
+RAMULATOR_PRINT_CMD_TRACE                "off"                           
 RAMULATOR_USE_REST_OF_ADDR_AS_ROW_ADDR   "on"                            
-RAMULATOR_TCK                            833333                          833333
-RAMULATOR_TCL                            16                              16
-RAMULATOR_TCCD                           6                               6
-RAMULATOR_TCCDS                          4                               4
-RAMULATOR_TCCDL                          6                               6
-RAMULATOR_TCWL                           12                              12
-RAMULATOR_TBL                            4                               4
-RAMULATOR_TWTR                           9                               9
-RAMULATOR_TWTRS                          3                               3
-RAMULATOR_TWTRL                          9                               9
-RAMULATOR_TRP                            16                              16
-RAMULATOR_TRPpb                          16                              16
-RAMULATOR_TRPab                          16                              16
-RAMULATOR_TRCD                           16                              16
-RAMULATOR_TRCDR                          16                              16
-RAMULATOR_TRCDW                          16                              16
-RAMULATOR_TRAS                           39                              39
-DRAM_TECH_IN_NM                          32                              32
+RAMULATOR_TCK                            833333                          
+RAMULATOR_TCL                            16                              
+RAMULATOR_TCCD                           6                               
+RAMULATOR_TCCDS                          4                               
+RAMULATOR_TCCDL                          6                               
+RAMULATOR_TCWL                           12                              
+RAMULATOR_TBL                            4                               
+RAMULATOR_TWTR                           9                               
+RAMULATOR_TWTRS                          3                               
+RAMULATOR_TWTRL                          9                               
+RAMULATOR_TRP                            16                              
+RAMULATOR_TRPpb                          16                              
+RAMULATOR_TRPab                          16                              
+RAMULATOR_TRCD                           16                              
+RAMULATOR_TRCDR                          16                              
+RAMULATOR_TRCDW                          16                              
+RAMULATOR_TRAS                           39                              
+DRAM_TECH_IN_NM                          32                              
 DVFS_ON                                  FALSE                           
 DVFS_METRIC                              DVFS_METRIC_NUM_ELEMS            
 DVFS_CONFIGS                             NULL                            
@@ -445,7 +304,7 @@ DVFS_BW_SHARING_NO_PREF_STALL            TRUE
 DVFS_BW_SHARING_CRIT_STATS               TRUE                            
 DVFS_COUNT_L1_ACCESS_STALL               FALSE                           
 NUM_CORES                                1                               
-CHIP_CYCLE_TIME                          312500                          312500
+CHIP_CYCLE_TIME                          312500                          
 CORE_0_CYCLE_TIME                        312500                          
 CORE_1_CYCLE_TIME                        312500                          
 CORE_2_CYCLE_TIME                        312500                          
@@ -510,33 +369,33 @@ CORE_60_CYCLE_TIME                       312500
 CORE_61_CYCLE_TIME                       312500                          
 CORE_62_CYCLE_TIME                       312500                          
 CORE_63_CYCLE_TIME                       312500                          
-ISSUE_WIDTH                              4                               6
-RS_FILL_WIDTH                            8                               0
-NODE_TABLE_SIZE                          256                             512
-NODE_RET_WIDTH                           4                               8
+ISSUE_WIDTH                              4                               
+RS_FILL_WIDTH                            8                               
+NODE_TABLE_SIZE                          256                             
+NODE_RET_WIDTH                           4                               
 NODE_RETIRE_RATE                         10                              
-DECODE_WIDTH                             4                               6
-IDQ_SIZE                                 140                             144
-REG_RENAMING_SCHEME                      0                               1
-REG_TABLE_INTEGER_PHYSICAL_SIZE          256                             280
-REG_TABLE_VECTOR_PHYSICAL_SIZE           256                             332
+DECODE_WIDTH                             4                               
+IDQ_SIZE                                 140                             
+REG_RENAMING_SCHEME                      0                               
+REG_TABLE_INTEGER_PHYSICAL_SIZE          256                             
+REG_TABLE_VECTOR_PHYSICAL_SIZE           256                             
 REG_TABLE_INTEGER_VIRTUAL_SIZE           256                             
 REG_TABLE_VECTOR_VIRTUAL_SIZE            256                             
 REG_RENAMING_MOVE_ELIMINATE              FALSE                           
 NODE_ISSUE_QUEUE_DISPATCH_SCHEME         0                               
 NODE_ISSUE_QUEUE_SCHEDULE_SCHEME         0                               
-RS_SIZES                                 "256"                           97 70 19
-RS_CONNECTIONS                           "xF"                            b0100110011 b1000001100 b0011000000
-FU_TYPES                                 "0, 0, 0, 0"                    b00100100111111100111001001111110010010011111110011100100111111 b10010000110111100011111001110111001000011011110001111100111011 b00000001000000001000000010000010000000100000000100000001000001 b00000001000000001000000010000010000000100000000100000001000001 b00000000110111100011011001110110000000011011110001101100111011 b01001000000000000111001001111110100100000000000011100100111111 b00000010000000010000000100000010000001000000001000000010000001 b00000010000000010000000100000010000001000000001000000010000001 b00000000000000000011001001110110000000000000000001100100111011 b00000001000000001000000010000010000000100000000100000001000001
+RS_SIZES                                 "256"                           
+RS_CONNECTIONS                           "xF"                            
+FU_TYPES                                 "0, 0, 0, 0"                    
 LSQ_ENABLE                               TRUE                            
 LOAD_QUEUE_ENTRY_NUM                     128                             
 STORE_QUEUE_ENTRY_NUM                    72                              
-DECODE_CYCLES                            1                               5
-MAP_CYCLES                               1                               5
+DECODE_CYCLES                            1                               
+MAP_CYCLES                               1                               
 ICACHE_LATENCY                           3                               
 EXTRA_REDIRECT_CYCLES                    0                               
-EXTRA_LATE_RECOVERY_CYCLES               0                               15                   # Number of cycles before the fetching of the first instructions after late recovery.
-EXTRA_EARLY_RECOVERY_CYCLES              0                               5                   # Number of cycles before the fetching of the first instructions after early recovery.
+EXTRA_LATE_RECOVERY_CYCLES               0                               
+EXTRA_EARLY_RECOVERY_CYCLES              0                               
 EXTRA_CALLSYS_CYCLES                     20                        const 
 DIE_ON_CALLSYS                           FALSE                           
 DIE_ON_RET_STALL_THRESH                  0                               
@@ -545,7 +404,7 @@ DIE_ON_MEM_BLOCK_THRESH                  0
 DIE_ON_MEM_BLOCK_CORE                    0                               
 ICACHE_FETCH_ACROSS_FETCH_TARGET         TRUE                            
 UOP_CACHE_FETCH_ACROSS_FETCH_TARGET      TRUE                            
-FETCH_OFF_PATH_OPS                       TRUE                            1
+FETCH_OFF_PATH_OPS                       TRUE                            
 WP_COLLECT_STATS                         TRUE                            
 OP_INV_DELAY                             1                               
 OP_NOP_DELAY                             1                               
@@ -580,11 +439,11 @@ OP_NOTPIPELINED_SLOW_DELAY               -20
 OP_NOTPIPELINED_VERY_SLOW_DELAY          -100                            
 UNIFORM_OP_DELAY                         0                               
 STALL_ON_WAIT_MEM                        TRUE                            
-STORES_DO_NOT_BLOCK_WINDOW               FALSE                           1
-PREFS_DO_NOT_BLOCK_WINDOW                FALSE                           1
+STORES_DO_NOT_BLOCK_WINDOW               FALSE                           
+PREFS_DO_NOT_BLOCK_WINDOW                FALSE                           
 OBEY_REG_DEP                             TRUE                            
 TRACK_L1_MISS_DEPS                       FALSE                           
-CBP_TRACE_R0                             NULL                            /home/HDD/hong/benchmarks/TRACE/SPEC17/bwaves_17_r_ref1/traces_simp/trace/window.0977_0003/drmemtrace.bwaves_r_base.scarab-m64.131887.9871.trace.zip
+CBP_TRACE_R0                             NULL                            /home/HDD/hong/benchmarks/TRACE/SPEC17/gcc_17_r_ref1/traces_simp/trace/window.0571_0001_0.151625_nocompress/drmemtrace.cpugcc_r_base.scarab-m64.203707.3328.trace
 CBP_TRACE_R1                             NULL                            
 CBP_TRACE_R2                             NULL                            
 CBP_TRACE_R3                             NULL                            
@@ -688,12 +547,12 @@ CONF_PERFECT_MISPRED_CONF                FALSE
 CONF_LOG_DFE_TO_REC                      FALSE                           
 CONF_LOG_PHASE_CYCLES                    FALSE                           
 FILL_BUFFER_SIZE                         256                             
-DEBUG_CYCLE_START                        0                               200000000
-DEBUG_CYCLE_STOP                         0                               200050000
+DEBUG_CYCLE_START                        0                               
+DEBUG_CYCLE_STOP                         0                               
 DEBUG_TIME_START                         0                               
 DEBUG_TIME_STOP                          0                               
-DEBUG_INST_START                         0                               0
-DEBUG_INST_STOP                          0                               -1
+DEBUG_INST_START                         0                               
+DEBUG_INST_STOP                          0                               
 DEBUG_OP_START                           0                               
 DEBUG_OP_STOP                            0                               
 DEBUG_CACHE_LIB                          FALSE                           
@@ -705,9 +564,9 @@ DEBUG_OP_POOL                            FALSE
 DEBUG_ORACLE                             FALSE                           
 DEBUG_FRONTEND                           FALSE                           
 DEBUG_ADDR_TRANS                         FALSE                           
-DEBUG_BP                                 FALSE                           1
+DEBUG_BP                                 FALSE                           
 DEBUG_BP_DIR                             FALSE                           
-DEBUG_BTB                                FALSE                           1
+DEBUG_BTB                                FALSE                           
 DEBUG_CRS                                FALSE                           
 DEBUG_MAP                                FALSE                           
 DEBUG_MEMORY                             FALSE                           
@@ -757,12 +616,12 @@ PERFECT_BTB                              FALSE
 PERFECT_IBP                              FALSE                           
 PERFECT_CRS                              FALSE                           
 PERFECT_CBR_BTB                          FALSE                           
-PERFECT_NT_BTB                           FALSE                           0  # deprecated, effectively always true.
+PERFECT_NT_BTB                           FALSE                           
 PERFECT_TARGET                           FALSE                           
-CFS_PER_CYCLE                            3                               6                         # Number of branches that can be predicted in a single cycle
-UPDATE_BP_OFF_PATH                       TRUE                            1                         # Allow off path ops to update branch predictor state (e.g., ops when they complete exec stage).
-BP_UPDATE_AT_RETIRE                      FALSE                           0                         # Update the BP at retire. If false, update at the end of exec.
-BP_MECH                                  TAGE64K_BP                      tage64k
+CFS_PER_CYCLE                            3                               
+UPDATE_BP_OFF_PATH                       TRUE                            
+BP_UPDATE_AT_RETIRE                      FALSE                           
+BP_MECH                                  TAGE64K_BP                      
 LATE_BP_MECH                             NUM_BP                          
 LATE_BP_LATENCY                          5                               
 HIST_LENGTH                              16                              
@@ -777,21 +636,21 @@ USE_FILTER                               FALSE
 INF_HYBRIDGP                             FALSE                           
 BP_HASH_TOS                              FALSE                           
 IBTB_HASH_TOS                            FALSE                           
-BTB_MECH                                 0                               generic
-BTB_ENTRIES                              (4 * 1024)                      16384
-BTB_ASSOC                                4                               4
-BTB_OFF_PATH_WRITES                      TRUE                            1
-ENABLE_CRS                               TRUE                            1
-CRS_ENTRIES                              32                              128
-CRS_REALISTIC                            0                               1
-ENABLE_IBP                               TRUE                            1                         # Enable the indirect branch predictor
+BTB_MECH                                 0                               
+BTB_ENTRIES                              (4 * 1024)                      
+BTB_ASSOC                                4                               
+BTB_OFF_PATH_WRITES                      TRUE                            
+ENABLE_CRS                               TRUE                            
+CRS_ENTRIES                              32                              
+CRS_REALISTIC                            0                               
+ENABLE_IBP                               TRUE                            
 USE_PAT_HIST                             TRUE                            
-IBTB_MECH                                1                               tc_tagged
+IBTB_MECH                                1                               
 IBTB_HIST_LENGTH                         16                              
-IBTB_OFF_PATH_WRITES                     FALSE                           1                         # Allow off path ops to update the ibtb.
+IBTB_OFF_PATH_WRITES                     FALSE                           
 TARGETS_IN_HIST                          4                               
-TC_ENTRIES                               (4 * 1024)                      4096
-TC_ASSOC                                 4                               4
+TC_ENTRIES                               (4 * 1024)                      
+TC_ASSOC                                 4                               
 NUM_CORR_BRANCHES                        3                               
 SEL_HIST_BP_ENTRIES                      8192                            
 SEL_HIST_LENGTH                          16                              
@@ -843,22 +702,22 @@ POWER_INTF_REF_CHIP_TECH_NM              22
 POWER_INTF_REF_CHIP_FREQ                 (3.2e9)                         
 POWER_INTF_REF_MEMORY_FREQ               (0.8e9)                         
 POWER_OTHER                              (0.0)                           
-PREF_STREAM_ON                           FALSE                           1
+PREF_STREAM_ON                           FALSE                           
 PREF_STREAM_PER_CORE_ENABLE              FALSE                           
 STREAM_BUFFER_N                          16                              
-STREAM_PREFETCH_N                        2                               4
-STREAM_START_DIS                         5                               1
-STREAM_LENGTH                            16                              64
+STREAM_PREFETCH_N                        2                               
+STREAM_START_DIS                         5                               
+STREAM_LENGTH                            16                              
 STREAM_FULL_N                            1                               
 STREAM_TRAIN_LENGTH                      16                              
-STREAM_TRAIN_NUM                         1                               4
+STREAM_TRAIN_NUM                         1                               
 PREF_ACC_USE_CACHE                       FALSE                           
 STREAM_STALL_ON_QUEUE_FULL               FALSE                           
 PREF_SCHEDULE_NUM                        4                               
 TRAIN_FILTER_SIZE                        32                              
 PREF_REQ_Q_SIZE                          64                              
-STREAM_CREATE_ON_DC_MISS                 FALSE                           0
-STREAM_CREATE_ON_L1_MISS                 TRUE                            1
+STREAM_CREATE_ON_DC_MISS                 FALSE                           
+STREAM_CREATE_ON_L1_MISS                 TRUE                            
 STREAM_TRAIN_ON_WRONGPATH                TRUE                            
 STREAM_CREATE_ON_WRONGPATH               TRUE                            
 STREAM_PREF_INTO_DCACHE                  FALSE                           
@@ -874,7 +733,7 @@ L2HIT_PREF_REQ_Q_SIZE                    128
 L2HIT_L2ACCESS_REQ_Q_SIZE                64                              
 PREF_STREAM_ACCPERSTREAM                 FALSE                           
 PREF_ACC_DISTANCE_10                     128                             
-PREF_FRAMEWORK_ON                        FALSE                           1
+PREF_FRAMEWORK_ON                        FALSE                           
 PREF_TRACE_ON                            FALSE                           
 PREF_UMLC_ON                             FALSE                           
 PREF_UL1_ON                              TRUE                            
@@ -892,7 +751,7 @@ PREF_UMLC_REQ_ADD_FILTER_ON              TRUE
 PREF_UL1REQ_ADD_FILTER_ON                TRUE                            
 PREF_DL0REQ_QUEUE_OVERWRITE_ON_FULL      FALSE                           
 PREF_UMLC_REQ_QUEUE_OVERWRITE_ON_FULL    FALSE                           
-PREF_UL1REQ_QUEUE_OVERWRITE_ON_FULL      FALSE                           1
+PREF_UL1REQ_QUEUE_OVERWRITE_ON_FULL      FALSE                           
 PREF_DL0SCHEDULE_NUM                     4                               
 PREF_UMLC_SCHEDULE_NUM                   4                               
 PREF_UL1SCHEDULE_NUM                     4                               
@@ -900,23 +759,23 @@ PREF_L1Q_DEMAND_RESERVE                  0
 PREF_REPORT_PREF_MATCH_AS_MISS           FALSE                           
 PREF_REPORT_PREF_MATCH_AS_HIT            TRUE                            
 PREF_UPDATE_ON_WRONGPATH                 TRUE                            
-PREF_TRAIN_ON_PREF_MISSES                FALSE                           0
-PREF_ORACLE_TRAIN_ON                     FALSE                           0
+PREF_TRAIN_ON_PREF_MISSES                FALSE                           
+PREF_ORACLE_TRAIN_ON                     FALSE                           
 PREF_REQ_DROP                            FALSE                           
 PREF_THROTTLE_ON                         FALSE                           
-PREF_THROTTLEFB_ON                       FALSE                           1
-PREF_ACC_THRESH_1                        0.90                            0.75
-PREF_ACC_THRESH_2                        0.70                            0.4
-PREF_ACC_THRESH_3                        0.60                            0.4
+PREF_THROTTLEFB_ON                       FALSE                           
+PREF_ACC_THRESH_1                        0.90                            
+PREF_ACC_THRESH_2                        0.70                            
+PREF_ACC_THRESH_3                        0.60                            
 PREF_ACC_THRESH_4                        0.40                            
-PREF_UPDATE_INTERVAL                     0                               8192
+PREF_UPDATE_INTERVAL                     0                               
 PREF_ANALYZE_LOAD                        FALSE                           
 PREF_POL_THRESH_1                        0.25                            
 PREF_POL_THRESH_2                        0.10                            
 PREF_POLBV_ON                            FALSE                           
 PREF_POLBV_SIZE                          1024                            
-PREF_TIMELY_THRESH                       0.05                            0.01
-PREF_POLPF_THRESH                        0.01                            0.005
+PREF_TIMELY_THRESH                       0.05                            
+PREF_POLPF_THRESH                        0.01                            
 PREF_DEGFB_USEONLYACC                    FALSE                           
 PREF_DEGFB_USEONLYPOL                    FALSE                           
 PREF_DEGFB_USEONLYLATE                   FALSE                           
@@ -1063,4 +922,3 @@ PREF_MARKOV_SEND_ON_PREF_HIT             TRUE
 PREF_MARKOV_UPDATE_ON_PREF_HIT           TRUE                            
 PREF_MARKOV_TABLE_UPDATE_POLICY          0                               
 PREF_MARKOV_SEND_THRESHOLD               0                               
-HOLD               0                               

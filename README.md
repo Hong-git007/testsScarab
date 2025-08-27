@@ -58,7 +58,7 @@ git clone https://github.com/Hong-git007/testsScarab.git
 
 # Navigate to the tools directory and clone a specific scarab fork
 cd tools
-git clone https://github.com/Hong-git007/scarab_guell.git scarab
+git clone https://github.com/Hong-git007/scarab.git
 
 # Clone scarab-infra into the tools directory as well
 git clone https://github.com/litz-lab/scarab-infra.git
@@ -251,3 +251,27 @@ After the simulation is complete, process the resulting CSV output files to deri
 # Example: Processing results for the leela_17_r_ref0 benchmark
 make process-all-csv BENCH_NAME=leela_17_r_ref0
 ```
+
+#### 8.3 Multiple Benchmarks Execution Workflow
+The Makefile also provides targets to run the entire simulation workflow for all benchmarks defined in the BENCH_LIST variable. You can run benchmarks in parallel, utilizing multiple CPU cores to speed up the process.
+
+* Generate All Traces in Parallel
+  Sequentially generates SimPoint traces for every benchmark in BENCH_LIST.
+```bash
+make trace-all-parallel
+```
+
+* Launch All Simulations in Parallel
+  Simultaneously runs both the baseline and perfect simulations for every benchmark.
+```bash
+make launch-all-parallel
+```
+
+* Process All Results
+  After all benchmark simulations are complete, use the command below to process all the generated CSV result files at once. This calculates the final weighted IPC and MPKI values for every benchmark. This step runs sequentially. 
+```bash
+make process-all-bench-csv
+```
+
+📝 Recommended Workflow: To run the entire benchmark suite most efficiently, using the parallel execution targets is recommended. Follow this sequence:
+make trace-all-parallel → make launch-all-parallel → make process-all-bench-csv.

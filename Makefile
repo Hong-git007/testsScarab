@@ -186,6 +186,65 @@ launch-trace-perfect:
 			$(SCARAB_ARGS) --perfect_bp 1 --perfect_target 1; \
 	done
 
+# ===================== 모든 CSV 파일 생성 및 최종 합계 포함 =====================
+process-all-csv:
+	@echo "--- Processing simulation outputs and creating CSVs for both baseline and perfect ---"
+	@for target_folder in baseline perfect; do \
+		echo "Processing $$target_folder folder..."; \
+		\
+		mkdir -p $(SIM_OUT)/$$target_folder/$(BENCH_NAME); \
+		CSV_FILE=$(SIM_OUT)/$$target_folder/$(BENCH_NAME)/results.csv; \
+		\
+		if [ -f "$$CSV_FILE" ]; then \
+			echo "Removing existing CSV file: $$CSV_FILE"; \
+			rm "$$CSV_FILE"; \
+		fi; \
+		\
+		printf "%-20s %15s %15s %15s\n" "SimPoint" "Weight" "IPC" "MPKI" > "$$CSV_FILE"; \
+		\
+		TOTAL_WEIGHT=0; \
+		TOTAL_WEIGHTED_IPC=0; \
+		TOTAL_WEIGHTED_MPKI=0; \
+		\
+		TRACE_BASE=$(TRACE_DIR)/$(BENCH_NAME)/traces_simp/trace; \
+		if [ ! -d "$$TRACE_BASE" ]; then \
+			echo "[WARNING] Trace directory for $(BENCH_NAME) not found. Skipping this benchmark for $$target_folder..."; \
+			echo "N/A" >> "$$CSV_FILE"; \
+			continue; \
+		fi; \
+		\
+		WINDOW_DIRS=$$(find $$TRACE_BASE -mindepth 1 -maxdepth 1 -type d | sort); \
+		for w in $$WINDOW_DIRS; do \
+			WIN_NAME=$$(basename $$w); \
+			WIN_IDX=$$(echo $$WIN_NAME | awk -F'_' '{print $$2}' | sed 's/^0*\([0-9]\)/\1/'); \
+			LINE=$$(awk '$$2=='"$$WIN_IDX"' {print}' $(TRACE_DIR)/$(BENCH_NAME)/simpoints/opt.w.lpt0.99); \
+			WEIGHT=$$(echo $$LINE | awk '{print $$1}'); \
+			WIN_FINAL="$${WIN_NAME}_$${WEIGHT}"; \
+			BP_FILE=$(SIM_OUT)/$$target_folder/$(BENCH_NAME)/$$WIN_FINAL/bp.stat.0.out; \
+			\
+			if [ -f "$$BP_FILE" ]; then \
+				TOTAL_WEIGHT=$$(echo "scale=7; $$TOTAL_WEIGHT + $$WEIGHT" | bc -l); \
+				\
+				IPC=$$(grep "Periodic:" "$$BP_FILE" | awk '{print $$NF}'); \
+				if [ -z "$$IPC" ]; then IPC=0; fi; \
+				WEIGHTED_IPC_CONTRIBUTION=$$(echo "scale=7; $$WEIGHT * $$IPC" | bc -l); \
+				TOTAL_WEIGHTED_IPC=$$(echo "scale=7; $$TOTAL_WEIGHTED_IPC + $$WEIGHTED_IPC_CONTRIBUTION" | bc -l); \
+				\
+				MPKI=$$(grep "CBR_ON_PATH_MISPREDICT_PER1000INST" "$$BP_FILE" | awk '{print $$5}'); \
+				if [ -z "$$MPKI" ]; then MPKI=0; fi; \
+				WEIGHTED_MPKI_CONTRIBUTION=$$(echo "scale=7; $$WEIGHT * $$MPKI" | bc -l); \
+				TOTAL_WEIGHTED_MPKI=$$(echo "scale=7; $$TOTAL_WEIGHTED_MPKI + $$WEIGHTED_MPKI_CONTRIBUTION" | bc -l); \
+				\
+				printf "%-20s %15.7f %15.5f %15.4f\n" "$$WIN_NAME" "$$WEIGHT" "$$IPC" "$$MPKI" >> "$$CSV_FILE"; \
+			else \
+				echo "[WARNING] bp.stat.0.out not found for $$WIN_FINAL. Skipping..."; \
+			fi \
+		done; \
+		\
+		printf "%-20s %15.7f %15.5f %15.4f\n" "TOTAL" "$$TOTAL_WEIGHT" "$$TOTAL_WEIGHTED_IPC" "$$TOTAL_WEIGHTED_MPKI" >> "$$CSV_FILE"; \
+	done
+	@echo "--- All CSV files created successfully ---"
+
 # ===================== Cleanup =====================
 clean_outputs:
 	rm -rf $(SIM_OUT)
@@ -227,3 +286,9 @@ launch-all-parallel:
 		( $(MAKE) launch-trace-perfect BENCH_NAME=$$bench ) & \
 	done
 	@wait
+
+# ===================== 모든 벤치마크의 CSV 파일 생성 =====================
+process-all-bench-csv:
+	@for bench in $(BENCH_LIST); do \
+		$(MAKE) process-all-csv BENCH_NAME=$$bench; \
+	done

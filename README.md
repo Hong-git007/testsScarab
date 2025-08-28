@@ -47,7 +47,6 @@ Clone the necessary repositories. This setup uses specific forks for certain com
 # Navigate to your chosen simulator directory
 # For example:
 # mkdir ~/simulator && cd ~/simulator
-
 git clone https://github.com/raffael-daltoe/Benchmarking.git
 
 # Navigate into the Benchmarking directory and replace the testsScarab directory

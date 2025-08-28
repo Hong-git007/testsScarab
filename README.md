@@ -49,7 +49,6 @@ Clone the necessary repositories. This setup uses specific forks for certain com
 # mkdir ~/simulator && cd ~/simulator
 
 git clone https://github.com/raffael-daltoe/Benchmarking.git
-git clone https://github.com/litz-lab/scarab-infra.git
 
 # Navigate into the Benchmarking directory and replace the testsScarab directory
 cd Benchmarking
